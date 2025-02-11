@@ -14,22 +14,22 @@ public class SumFile {
 
     private LocalDate endRange;
 
-    private List<SaleFile> saleFileList = new ArrayList<>();
+    private List<Sale> saleList = new ArrayList<>();
 
-    public SumFile(List<SaleFile> saleFileList) {
-        this.saleFileList = saleFileList;
+    public SumFile(List<Sale> saleList) {
+        this.saleList = saleList;
     }
 
     public long getId() {
         return id;
     }
 
-    public List<SaleFile> getSaleFileList() {
-        return saleFileList;
+    public List<Sale> getSaleList() {
+        return saleList;
     }
 
-    public void setSaleFileList(List<SaleFile> saleFileList) {
-        this.saleFileList = saleFileList;
+    public void setSaleList(List<Sale> saleList) {
+        this.saleList = saleList;
     }
 
     public double getTotalSaleAmount() {

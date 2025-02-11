@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class SaleFile {
+public class Sale {
 
     private long id;
 
@@ -15,12 +15,12 @@ public class SaleFile {
 
     private LocalDate date;
 	
-	public SaleFile(){
+	public Sale(){
 		this.id = ++idIncrementor;
 	}
 
 
-    public SaleFile(String productName, double quantity, double pricePerUnity, LocalDate date) {
+    public Sale(String productName, double quantity, double pricePerUnity, LocalDate date) {
         this.id = ++idIncrementor;
         this.productName = Objects.requireNonNull(productName, "product name can not be null");
         this.quantity = quantity;
