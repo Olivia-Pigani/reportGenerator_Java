@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 public class SumFile {
 
@@ -14,22 +15,24 @@ public class SumFile {
 
     private LocalDate endRange;
 
-    private List<Sale> saleList = new ArrayList<>();
+    private List<File> fileList = new ArrayList<>();
+	
+	public SumFile(){}
 
-    public SumFile(List<Sale> saleList) {
-        this.saleList = saleList;
+    public SumFile(List<File> fileList) {
+        this.fileList = fileList;
     }
 
     public long getId() {
         return id;
     }
 
-    public List<Sale> getSaleList() {
-        return saleList;
+    public List<File> getFileList() {
+        return fileList;
     }
 
-    public void setSaleList(List<Sale> saleList) {
-        this.saleList = saleList;
+    public void setFileList(List<File> fileList) {
+        this.fileList = fileList;
     }
 
     public double getTotalSaleAmount() {

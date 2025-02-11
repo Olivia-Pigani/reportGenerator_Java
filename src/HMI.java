@@ -92,7 +92,7 @@ public class HMI {
 		
 	}
 	
-	private void quitProgram(){
+	public void quitProgram(){
 		System.out.println("bye !");
 	}
 
