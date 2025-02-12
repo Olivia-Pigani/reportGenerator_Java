@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.stream.*;
 import java.util.Comparator;
 
+public class ReportUtil{
 
-public class SumFileUtil{
+	public static final String REPORT_ROOT_FILEPATH = "src/generated_reports/report_";
 
-	public SumFileUtil(){}
+	public ReportUtil(){}
 	
-	
-	public SumFile sumFileGenerator(List<File> fileList){
+	public Report reportGenerator(List<File> fileList){
 		
-		SumFile newSumFile = new SumFile();
+		Report newReport = new Report();
 				
 		double totalSaleAmount = fileList.stream()
 			.flatMap(file -> file.getSaleList().stream())
@@ -31,25 +31,25 @@ public class SumFileUtil{
 			.max(Comparator.naturalOrder())
 			.orElse(LocalDate.now());
 			
-			newSumFile.setFileList(fileList);
-			newSumFile.setTotalSaleAmount(totalSaleAmount);
-			newSumFile.setStartRange(startDate);
-			newSumFile.setEndRange(lastDate);
+			newReport.setFileList(fileList);
+			newReport.setTotalSaleAmount(totalSaleAmount);
+			newReport.setStartRange(startDate);
+			newReport.setEndRange(lastDate);
 		
 		
-			return newSumFile;
+			return newReport;
 		
 	}
 	
-	public String getSumFileData(SumFile sumFile){
+	public String writeDataInSkeleton(Report report){
 	
 		StringBuilder sb = new StringBuilder();
 		
-		String header = getSumFileHeader(sumFile);
+		String header = getSumFileHeader(report);
 		sb.append(header);
 
 		
-		String salesContent = sumFile.getFileList().stream()
+		String salesContent = report.getFileList().stream()
 			.flatMap(file -> file.getSaleList().stream())
 			.map(this::getSumFileSaleSkeleton)
 			.collect(Collectors.joining());
@@ -63,46 +63,36 @@ public class SumFileUtil{
 	}
 	
 	
-	private String getSumFileHeader(SumFile sumFile){
+	private String getSumFileHeader(Report report){
 	
-	return String.format("""
+		return String.format("""	
+		Report %d
 		
-		-----------------------------------
-		-----------------------------------
-		
-		File summary %d
-		
-		total sales: %d 
+		total sales: %.2f 
 		date range: %s to %s 
-		
 		-----------------------------------
 		-----------------------------------
-		
-		""", sumFile.getId(), sumFile.getTotalSaleAmount(),sumFile.getStartRange(),sumFile.getEndRange());
+		""", report.getId(), report.getTotalSaleAmount(),report.getStartRange().toString(),report.getEndRange().toString());
 	
 	}
 	
-		private String getSumFileSaleSkeleton(Sale sale){
+	private String getSumFileSaleSkeleton(Sale sale){
 
 		return String.format("""
 		
 		-----------------------------------
-		-----------------------------------
-		
 		Sale %d
 		
 		
 		name | quantity | date | price
 		------------------------------
-		%s	 |  %d		|  %s  | %d
-		
+		%s	 |  %.2f 	|  %s  | %.2f 
 		
 		-----------------------------------
-		-----------------------------------
 		
-		""", sale.getId(),sale.getProductName(),sale.getQuantity(),sale.getPricePerUnity(),sale.getDate());
+		""", sale.getId(),sale.getProductName(),sale.getQuantity(),sale.getDate().toString(),sale.getPricePerUnity());
 
 
-		}
+	}
 	
 }

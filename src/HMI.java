@@ -32,7 +32,7 @@ public class HMI {
 	}
 	
 	
-	public List<File> generateReport(){
+	public List<File> generateReportMenu(){
 		
 		int fileAmount;
 		
@@ -43,11 +43,11 @@ public class HMI {
 		}while(fileAmount > 4 || fileAmount < 1);
 			
 			
-		return filesMaker(fileAmount);
+		return filesMakerMenu(fileAmount);
 		
 	}
 	
-	private List<File> filesMaker(int fileAmount){
+	private List<File> filesMakerMenu(int fileAmount){
 		
 		List<File> fileList = new ArrayList<>();
 		
@@ -65,7 +65,7 @@ public class HMI {
 				System.out.println("Name of the product ?");
 				String name = scanner.nextLine();
 				
-				System.out.println("Price per unit (in €)?");
+				System.out.println("Price per unit (in euros)?");
 				double price = scanner.nextDouble();
 				scanner.nextLine();
 				
@@ -92,7 +92,7 @@ public class HMI {
 		
 	}
 	
-	public void quitProgram(){
+	public void quitProgramMenu(){
 		System.out.println("bye !");
 	}
 

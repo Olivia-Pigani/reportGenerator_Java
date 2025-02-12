@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 
-public class SumFile {
+public class Report {
 
     private long id;
 
@@ -17,9 +17,9 @@ public class SumFile {
 
     private List<File> fileList = new ArrayList<>();
 	
-	public SumFile(){}
+	public Report(){}
 
-    public SumFile(List<File> fileList) {
+    public Report(List<File> fileList) {
         this.fileList = fileList;
     }
 
