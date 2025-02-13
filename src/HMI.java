@@ -15,23 +15,14 @@ public class HMI {
 	private Scanner scanner = new Scanner(System.in);
 	private static int choice;
 	private static final String REPORT_DIRECTORY = "src/generated_reports";
-	
+	private static ChosenLanguage chosenLanguage = ChosenLanguage.getInstance();
+
 
 	public HMI(){}
 	
 	public int mainMenu(){
 		
-		
-		String welcomeMsg = (
-		
-		"""
-		==== Welcome to the report generator ! ====
-		Please make a choice:
-		1. generate a report
-		2. read a report
-		3. quit the program
-		"""
-		);
+		String welcomeMsg = chosenLanguage.getMsg("welcome");
 		
 		choice = intInputHandler(welcomeMsg);
 		return choice;
@@ -43,7 +34,7 @@ public class HMI {
 		int saleFileAmount;
 		
 		do{
-				saleFileAmount = intInputHandler("How much files do you want to use to make the report (you can use 4 files maximum) ? ");
+				saleFileAmount = intInputHandler(chosenLanguage.getMsg("files_sale_amount"));
 				
 		}while(saleFileAmount > 4 || saleFileAmount < 1);
 			
@@ -59,19 +50,19 @@ public class HMI {
 		for(int i = 1; i<=saleFileAmount;i++){
 			SaleFile newSaleFile = new SaleFile();
 			
-			System.out.println("file number " + i + ": ");
-			int salesAmount = intInputHandler("How much sales for this file ?");
+			System.out.println(chosenLanguage.getMsg("file_number") + i + ": ");
+			int salesAmount = intInputHandler(chosenLanguage.getMsg("sales_amount"));
 			
 			for(int j = 1 ; j<= salesAmount;j++){				
-				System.out.println("Sale number " + j + ": ");
+				System.out.println(chosenLanguage.getMsg("sale_number") + j + ": ");
 				
-				String name = stringInputHandler("Name of the product ?");
+				String name = stringInputHandler(chosenLanguage.getMsg("name"));
 				
-				double price = doubleInputHandler("Price per unit (in euros)?");
+				double price = doubleInputHandler(chosenLanguage.getMsg("price"));
 				
-				double quantity = doubleInputHandler("Sold quantity ?");
+				double quantity = doubleInputHandler(chosenLanguage.getMsg("quantity"));
 				
-				LocalDate date = dateInputHandler("The date of the sale (dd/MM/yyyy format) ?");
+				LocalDate date = dateInputHandler(chosenLanguage.getMsg("date"));
 				
 				Sale newSale = new Sale (name, quantity, price, date);
 				newSaleFile.getSaleList().add(newSale);
@@ -94,7 +85,7 @@ public class HMI {
 		if(allReportFiles != null && allReportFiles.length>0){
 			
 			Arrays.stream(allReportFiles).forEach(file -> System.out.println(file.getName()));
-			int choice = intInputHandler("Which file do you want to read (select the file number please )?");
+			int choice = intInputHandler(chosenLanguage.getMsg("file_to_read"));
 			
 			selectedFile = Arrays.stream(allReportFiles)
 				.filter(file -> file.getName().matches("^report_" + choice + "\\..*")) 
@@ -105,17 +96,21 @@ public class HMI {
 				IoUtil.readBinaryFile(selectedFile.getName());
 				IoUtil.readTextFile(selectedFile.getName());
 			} else {
-				System.out.println("There is no reports yet");
+				System.out.println(chosenLanguage.getMsg("no_file_yet"));
 			}	
 		
 		} else {
-			System.out.println("There is no reports yet");
+			System.out.println(chosenLanguage.getMsg("no_file_yet"));
 		}
 		
 	}
 	
+	public int languageSettingMenu(){
+		return intInputHandler("1.Français \n 2.English");
+	}
+	
 	public void quitProgramMenu(){
-		System.out.println("bye !");
+		System.out.println(chosenLanguage.getMsg("bye"));
 	}
 	
 
@@ -128,7 +123,7 @@ public class HMI {
 				scanner.nextLine();
 				return input;
 			}catch(InputMismatchException ex){
-				System.out.println("ouch, the input must be of type number!");
+				System.out.println(chosenLanguage.getMsg("int_or_double_input_handler"));
 				scanner.nextLine();
 			}
 				}
@@ -142,7 +137,7 @@ public class HMI {
 				String input = scanner.nextLine();
 				return input;
 			}catch(InputMismatchException ex){
-				System.out.println("ouch, the input must be of type word!");
+				System.out.println(chosenLanguage.getMsg("int_string_handler"));
 				scanner.nextLine();
 			}
 		}
@@ -158,7 +153,7 @@ public class HMI {
 				return input;
 			
 			} catch (InputMismatchException ex) {
-				System.out.println("ouch, the input must be of type number!");
+				System.out.println(chosenLanguage.getMsg("int_or_double_input_handler"));
 				scanner.nextLine(); 
 			}
 		}
@@ -175,7 +170,7 @@ public class HMI {
 				LocalDate dateLD = LocalDate.parse(input, dtf);
 				return dateLD;
 			}catch(DateTimeParseException ex){
-				System.out.println("ouch, the input must be of type date dd/MM/yyyy! Example : 10/02/1994");
+				System.out.println(chosenLanguage.getMsg("int_date_handler"));
 			}
 		}
 	}

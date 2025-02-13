@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 public class ReportUtil{
 
+	private static ChosenLanguage chosenLanguage = ChosenLanguage.getInstance();
 	public static final String REPORT_ROOT_FILEPATH = "src/generated_reports/";
 
 	public ReportUtil(){}
@@ -66,31 +67,13 @@ public class ReportUtil{
 	
 	private String getSumFileHeader(Report report){
 	
-		return String.format("""	
-		Report: %d
-		
-		total sales: %.2f 
-		date range: %s to %s 
-		-----------------------------------
-		-----------------------------------
-		""", report.getId(), report.getTotalSaleAmount(),report.getStartRange().toString(),report.getEndRange().toString());
+		return String.format(chosenLanguage.getMsg("report_header"), report.getId(), report.getTotalSaleAmount(),report.getStartRange().toString(),report.getEndRange().toString());
 	
 	}
 	
 	private String getSumFileSaleSkeleton(Sale sale){
 
-		return String.format("""
-		
-		-----------------------------------
-		Sale id: %d
-		
-		
-		name | quantity | date | price
-		------------------------------
-		%s	 |  %.2f 	|  %s  | %.2f 
-		
-		-----------------------------------
-		""", sale.getId(),sale.getProductName(),sale.getQuantity(),sale.getDate().toString(),sale.getPricePerUnity());
+		return String.format(chosenLanguage.getMsg("report_sale"), sale.getId(),sale.getProductName(),sale.getQuantity(),sale.getDate().toString(),sale.getPricePerUnity());
 
 
 	}

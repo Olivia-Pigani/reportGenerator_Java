@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.io.OutputStreamWriter;
+import java.io.InputStreamReader;
+
 
 public class IoUtil{
 	
@@ -21,7 +25,7 @@ public class IoUtil{
 			file.delete();
 		}
 		
-		try(var writer = new BufferedWriter(new FileWriter(file))){
+		try (var writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
 			writer.write(content);
 			System.out.println("The text file was successfully generated!");
 		}catch(IOException ex){
@@ -39,7 +43,7 @@ public class IoUtil{
 		}
 
 		try(var outputStream = new FileOutputStream(file)){
-			outputStream.write(content.getBytes());
+			outputStream.write(content.getBytes(StandardCharsets.UTF_8));
 			System.out.println("The binary file was successfully generated!");
 		}catch(IOException ex){
 			ex.printStackTrace();
@@ -48,14 +52,13 @@ public class IoUtil{
 	
 	public static void readTextFile(String fileToRead){
 		
-		try(var reader = new BufferedReader(new FileReader(ReportUtil.REPORT_ROOT_FILEPATH + fileToRead))){
-			
+		try (var reader = new BufferedReader(new InputStreamReader(new FileInputStream(ReportUtil.REPORT_ROOT_FILEPATH + fileToRead), StandardCharsets.UTF_8))) {
 			System.out.println("*from text file*");
 			String line;
 			
 			while((line = reader.readLine())!= null){
 				System.out.println(line);
-				line = reader.readLine();
+				//line = reader.readLine();
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();
@@ -65,14 +68,13 @@ public class IoUtil{
 	
 	public static void readBinaryFile(String fileToRead){
 		
-		try(var reader = new FileInputStream(ReportUtil.REPORT_ROOT_FILEPATH + fileToRead)){
+		try (var reader = new BufferedReader(new InputStreamReader(new FileInputStream(ReportUtil.REPORT_ROOT_FILEPATH + fileToRead), StandardCharsets.UTF_8))) {
 			
 			System.out.println("*from binary file*");
-			int data;
-			
-			while((data = reader.read()) != -1){
-				System.out.print((char) data); 
-			}
+			String line;
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+				}
 
 		}catch (IOException e) {
             e.printStackTrace();

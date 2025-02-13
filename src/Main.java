@@ -9,13 +9,15 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.ExecutionException;
 
 
+
 public class Main {
 	
 	private static HMI hmi = new HMI();
 	private static ReportUtil reportUtil = new ReportUtil();
+	private static ChosenLanguage chosenLanguage = ChosenLanguage.getInstance();
 	
 	public static void main(String... args){
-		
+
 		start();
 	}
 	
@@ -24,7 +26,8 @@ public class Main {
 		switch(choice){
 			case 1 -> generateReport();
 			case 2 -> readReport();
-			case 3 -> quitProgram();
+			case 3 -> languageSetting();
+			case 4 -> quitProgram();
 			
 		}
 	}
@@ -56,6 +59,18 @@ public class Main {
 	
 	private static void readReport(){
 		hmi.readReportMenu();
+		start();
+	}
+	
+	private static void languageSetting(){
+		int languageChoice = hmi.languageSettingMenu();
+		
+		if(languageChoice == 1){
+		chosenLanguage.setGeneralLanguage(Language.FRENCH);
+		}else if (languageChoice == 2) {
+		chosenLanguage.setGeneralLanguage(Language.ENGLISH);
+		}
+		
 		start();
 	}
 	
