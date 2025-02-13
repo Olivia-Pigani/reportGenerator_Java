@@ -6,32 +6,32 @@ import java.util.Comparator;
 
 public class ReportUtil{
 
-	public static final String REPORT_ROOT_FILEPATH = "src/generated_reports/report_";
+	public static final String REPORT_ROOT_FILEPATH = "src/generated_reports/";
 
 	public ReportUtil(){}
 	
-	public Report reportGenerator(List<File> fileList){
+	public Report reportGenerator(List<SaleFile> saleFileList){
 		
 		Report newReport = new Report();
 				
-		double totalSaleAmount = fileList.stream()
+		double totalSaleAmount = saleFileList.stream()
 			.flatMap(file -> file.getSaleList().stream())
 			.mapToDouble(Sale::getPricePerUnity)
 			.sum();
 		
-		LocalDate startDate = fileList.stream()
+		LocalDate startDate = saleFileList.stream()
 			.flatMap(file -> file.getSaleList().stream())
 			.map(Sale::getDate)
 			.min(Comparator.naturalOrder())
 			.orElse(LocalDate.now());
 			
-		LocalDate lastDate = fileList.stream()
+		LocalDate lastDate = saleFileList.stream()
 			.flatMap(file -> file.getSaleList().stream())
 			.map(Sale::getDate)
 			.max(Comparator.naturalOrder())
 			.orElse(LocalDate.now());
 			
-			newReport.setFileList(fileList);
+			newReport.setSaleFileList(saleFileList);
 			newReport.setTotalSaleAmount(totalSaleAmount);
 			newReport.setStartRange(startDate);
 			newReport.setEndRange(lastDate);
@@ -47,9 +47,10 @@ public class ReportUtil{
 		
 		String header = getSumFileHeader(report);
 		sb.append(header);
+		sb.append("\n"); //allow to make a link between header and other content to make sur that text files are correctly generated.
 
 		
-		String salesContent = report.getFileList().stream()
+		String salesContent = report.getSaleFileList().stream()
 			.flatMap(file -> file.getSaleList().stream())
 			.map(this::getSumFileSaleSkeleton)
 			.collect(Collectors.joining());
@@ -66,7 +67,7 @@ public class ReportUtil{
 	private String getSumFileHeader(Report report){
 	
 		return String.format("""	
-		Report %d
+		Report: %d
 		
 		total sales: %.2f 
 		date range: %s to %s 
@@ -81,7 +82,7 @@ public class ReportUtil{
 		return String.format("""
 		
 		-----------------------------------
-		Sale %d
+		Sale id: %d
 		
 		
 		name | quantity | date | price
@@ -89,7 +90,6 @@ public class ReportUtil{
 		%s	 |  %.2f 	|  %s  | %.2f 
 		
 		-----------------------------------
-		
 		""", sale.getId(),sale.getProductName(),sale.getQuantity(),sale.getDate().toString(),sale.getPricePerUnity());
 
 

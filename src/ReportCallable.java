@@ -9,21 +9,21 @@ public class ReportCallable implements Callable<Report>{
 	
 	private CountDownLatch latch; 
 	private ReportUtil reportUtil;
-	private List<File> fileList;
+	private List<SaleFile> saleFileList;
 	
-	ReportCallable(CountDownLatch latch, List<File> fileList){
+	ReportCallable(CountDownLatch latch, List<SaleFile> saleFileList){
 		this.latch=latch;
-		this.fileList=fileList;
+		this.saleFileList=saleFileList;
 		this.reportUtil = new ReportUtil();
 	}
 		
 	@Override
 	public Report call(){
-		Report report = new Report();
+		Report report = null;
 		try{
 			System.out.println(Thread.currentThread().getName() + " is working on report making ...");
 			Thread.sleep(1500); //fake processing time, for demo purpose
-			report = reportUtil.reportGenerator(this.fileList);
+			report = reportUtil.reportGenerator(this.saleFileList);
 			
 			latch.countDown();
 			

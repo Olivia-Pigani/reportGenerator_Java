@@ -15,24 +15,27 @@ public class Report {
 
     private LocalDate endRange;
 
-    private List<File> fileList = new ArrayList<>();
+    private List<SaleFile> saleFileList = new ArrayList<>();
 	
-	public Report(){}
+	public Report(){
+		this.id = ++idIncrementor;
+	}
 
-    public Report(List<File> fileList) {
-        this.fileList = fileList;
+    public Report(List<SaleFile> saleFileList) {
+		this.id = ++idIncrementor;
+        this.saleFileList = saleFileList;
     }
 
     public long getId() {
         return id;
     }
 
-    public List<File> getFileList() {
-        return fileList;
+    public List<SaleFile> getSaleFileList() {
+        return saleFileList;
     }
 
-    public void setFileList(List<File> fileList) {
-        this.fileList = fileList;
+    public void setSaleFileList(List<SaleFile> saleFileList) {
+        this.saleFileList = saleFileList;
     }
 
     public double getTotalSaleAmount() {

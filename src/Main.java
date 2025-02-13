@@ -23,23 +23,22 @@ public class Main {
 		int choice = hmi.mainMenu();		
 		switch(choice){
 			case 1 -> generateReport();
-			case 2 -> {
-				hmi.quitProgramMenu();
-				System.exit(0);
-			} 
+			case 2 -> readReport();
+			case 3 -> quitProgram();
+			
 		}
 	}
 	
 	private static void generateReport(){
 		
-		List<File> fileList = hmi.generateReportMenu();	
+		List<SaleFile> saleFileList = hmi.generateReportMenu();	
 		
 		CountDownLatch latch = new CountDownLatch(1); //for t1
 		CyclicBarrier barrier = new CyclicBarrier(2, () -> System.out.println("the report is ready!"));// for t2 and t3
 		
 		try(ExecutorService executor = Executors.newFixedThreadPool(3)){
 			
-			Future<Report> reportFuture = executor.submit(new ReportCallable(latch,fileList));
+			Future<Report> reportFuture = executor.submit(new ReportCallable(latch,saleFileList));
 			Report report = reportFuture.get();
 			
 			latch.await(); //t2 and t3 wait until t1 has finished it's task.
@@ -55,6 +54,14 @@ public class Main {
 		start();
 	}
 	
+	private static void readReport(){
+		hmi.readReportMenu();
+		start();
+	}
 	
+	private static void quitProgram(){
+		hmi.quitProgramMenu();
+		System.exit(0);
+	}
 	
 }

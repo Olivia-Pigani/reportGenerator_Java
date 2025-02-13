@@ -1,14 +1,20 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
+import java.io.File;
+import java.util.stream.*;
+import java.util.InputMismatchException;
+import java.time.format.DateTimeParseException;
 
 public class HMI {
 
 	private Scanner scanner = new Scanner(System.in);
 	private static int choice;
+	private static final String REPORT_DIRECTORY = "src/generated_reports";
 	
 
 	public HMI(){}
@@ -16,109 +22,161 @@ public class HMI {
 	public int mainMenu(){
 		
 		
-		System.out.println(
+		String welcomeMsg = (
 		
 		"""
 		==== Welcome to the report generator ! ====
 		Please make a choice:
 		1. generate a report
-		2. quit the program
+		2. read a report
+		3. quit the program
 		"""
 		);
 		
-		choice = scanner.nextInt();
-		scanner.nextLine(); 
+		choice = intInputHandler(welcomeMsg);
 		return choice;
 	}
 	
 	
-	public List<File> generateReportMenu(){
+	public List<SaleFile> generateReportMenu(){
 		
-		int fileAmount;
+		int saleFileAmount;
 		
 		do{
-				System.out.println("How much files do you want to use to make the report (you can use 4 files maximum) ? ");
-				fileAmount = scanner.nextInt();
-				scanner.nextLine();
-		}while(fileAmount > 4 || fileAmount < 1);
+				saleFileAmount = intInputHandler("How much files do you want to use to make the report (you can use 4 files maximum) ? ");
+				
+		}while(saleFileAmount > 4 || saleFileAmount < 1);
 			
 			
-		return filesMakerMenu(fileAmount);
+		return filesMakerMenu(saleFileAmount);
 		
 	}
 	
-	private List<File> filesMakerMenu(int fileAmount){
+	private List<SaleFile> filesMakerMenu(int saleFileAmount){
 		
-		List<File> fileList = new ArrayList<>();
+		List<SaleFile> saleFileList = new ArrayList<>();
 		
-		for(int i = 1; i<=fileAmount;i++){
-			File newFile = new File();
+		for(int i = 1; i<=saleFileAmount;i++){
+			SaleFile newSaleFile = new SaleFile();
 			
 			System.out.println("file number " + i + ": ");
-			System.out.println("How much sales for this file ?");
-			int salesAmount = scanner.nextInt();
-			scanner.nextLine();
+			int salesAmount = intInputHandler("How much sales for this file ?");
 			
-			for(int j = 0 ; j< salesAmount;j++){				
-				System.out.println("First sale:");
+			for(int j = 1 ; j<= salesAmount;j++){				
+				System.out.println("Sale number " + j + ": ");
 				
-				System.out.println("Name of the product ?");
-				String name = scanner.nextLine();
+				String name = stringInputHandler("Name of the product ?");
 				
-				System.out.println("Price per unit (in euros)?");
-				double price = scanner.nextDouble();
-				scanner.nextLine();
+				double price = doubleInputHandler("Price per unit (in euros)?");
 				
-				System.out.println("Sold quantity ?");
-				double quantity = scanner.nextDouble();
-				scanner.nextLine();
+				double quantity = doubleInputHandler("Sold quantity ?");
 				
-				System.out.println("The date of the sale (dd/MM/yyyy format) ?");
-				String date = scanner.nextLine();
-				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				LocalDate dateLD = LocalDate.parse(date, dtf);
+				LocalDate date = dateInputHandler("The date of the sale (dd/MM/yyyy format) ?");
 				
-				Sale newSale = new Sale (name, quantity, price, dateLD);
-				newFile.getSaleList().add(newSale);
+				Sale newSale = new Sale (name, quantity, price, date);
+				newSaleFile.getSaleList().add(newSale);
 			}
 				
-
-				fileList.add(newFile);	
+				saleFileList.add(newSaleFile);	
 
 		}
-			return fileList;
+			return saleFileList;
+		
+	}
+	
+	public void readReportMenu(){
+		
+		File directory = new File(REPORT_DIRECTORY);
+		File[] allReportFiles = directory.listFiles();
+		File selectedFile;
 		
 		
+		if(allReportFiles != null && allReportFiles.length>0){
+			
+			Arrays.stream(allReportFiles).forEach(file -> System.out.println(file.getName()));
+			int choice = intInputHandler("Which file do you want to read (select the file number please )?");
+			
+			selectedFile = Arrays.stream(allReportFiles)
+				.filter(file -> file.getName().matches("^report_" + choice + "\\..*")) 
+				.findFirst()
+				.orElse(null);
+				
+			if(selectedFile != null){
+				IoUtil.readBinaryFile(selectedFile.getName());
+				IoUtil.readTextFile(selectedFile.getName());
+			} else {
+				System.out.println("There is no reports yet");
+			}	
+		
+		} else {
+			System.out.println("There is no reports yet");
+		}
 		
 	}
 	
 	public void quitProgramMenu(){
 		System.out.println("bye !");
 	}
+	
 
+	private int intInputHandler(String msg){
+		while(true){
+		System.out.println(msg);
+		
+			try{
+				int input = scanner.nextInt();
+				scanner.nextLine();
+				return input;
+			}catch(InputMismatchException ex){
+				System.out.println("ouch, the input must be of type number!");
+				scanner.nextLine();
+			}
+				}
+	}
+	
+	private String stringInputHandler(String msg){
+		while(true){
+			System.out.println(msg);
 
+			try{
+				String input = scanner.nextLine();
+				return input;
+			}catch(InputMismatchException ex){
+				System.out.println("ouch, the input must be of type word!");
+				scanner.nextLine();
+			}
+		}
+	}
+	
+	private double doubleInputHandler(String msg) {
+		while (true) {
+			System.out.println(msg);
+		
+			try {
+				double input = scanner.nextDouble();
+				scanner.nextLine(); 
+				return input;
+			
+			} catch (InputMismatchException ex) {
+				System.out.println("ouch, the input must be of type number!");
+				scanner.nextLine(); 
+			}
+		}
+    }
+	
+	
+	private LocalDate dateInputHandler(String msg){
+		while(true){
+			System.out.println(msg);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			try{
+				String input = scanner.nextLine();
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				LocalDate dateLD = LocalDate.parse(input, dtf);
+				return dateLD;
+			}catch(DateTimeParseException ex){
+				System.out.println("ouch, the input must be of type date dd/MM/yyyy! Example : 10/02/1994");
+			}
+		}
+	}
 }

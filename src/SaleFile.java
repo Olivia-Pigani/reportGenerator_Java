@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class File {
+public class SaleFile {
 	
 	private long id;
 
@@ -9,11 +9,11 @@ public class File {
 	
 	private List<Sale> saleList = new ArrayList<>();
 	
-	public File(){
+	public SaleFile(){
 		this.id=++idIncrementor;
 	}
 	
-	public File(List<Sale> saleList){
+	public SaleFile(List<Sale> saleList){
 		this.id=++idIncrementor;
 		this.saleList = saleList;	
 	}
