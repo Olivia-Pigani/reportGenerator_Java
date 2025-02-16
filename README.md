@@ -52,11 +52,10 @@ For this section, the original code from Section 1 was slightly modified.
 
 used commands for this project :
 
-1. execute
+1. compile
 
 ```
-javac --module-source-path src -d out $(find sr
-c -name "*.java")
+javac --module-source-path src -d out $(find src -name "*.java")
 ```
 
 2. make modular jar files
