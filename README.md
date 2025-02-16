@@ -1,35 +1,51 @@
 # Report generator application in pure Java
 
-This project was made in purpose to review Java modularity without any frameworks like Spring or project manager like Maven and any IDE, in fact, we are using only Notepad++ with JDK !
+This project was made to review Java modularity without relying on any frameworks, IDEs, or project managers like Maven. In fact, we are using only Notepad++ and the JDK here!
 
 ## About 
 
-The main functionnality of this application is to fuse multiples .csv files content into only one .csv file, this one will be use to genrate a report, available in multiple languages (Internationalization support).
-
-** put big picture image
+The main functionality of this application is to generate reports in text and binary files based on multiple pieces of information that the user inputs via the console. The application is available in multiple languages.
+In this project, we review several Java concepts, such as concurrency, nio, Stream API, and modularity.
 
 
 ## How to start this project in old-fashioned way ?
 
-As said before, this project do not use any framework or project manager, we have to execute build and run "by ourselves" :).
-First of all, you are invited to git clone the project.
+In section 1 we use classpath.
 
-### Section 1 : classpath-> basic compilation and interpretation
+In section 2 we use modulepath.
+
+### In Section 1 : classpath
+
+
+<img src="./design/section1_classpath.png" alt="section 1 view">
+
+used commands for this project :
 
 1. javac -d bin src/*.java
-Allow to use java compilator and transform java source file to byte class files, -d is for specify the output localization which is bin.
 
-2. java -cp bin HMI / java --class-path bin HMI
-Allow to use JVM to interpret class files in bin, we specify the entry point file which is HMI file.
+2. java -cp "bin;resources" Main / java --class-path bin Main
 
-3. jar cfm myapp.jar MANIFEST.mf -C bin .
-Allow to produce a jar file. 
-c for create a jar
-f to give a specific name to our jar
-m to specify that we use a MANIFEST.mf file
--C bin to add all classes files in bin repository to our jar.
+3. jar cfm myapp.jar meta-inf/MANIFEST.mf -C bin .
 
 4. java -jar myapp.jar
-The jar file is executed !
 
-### Section 2 : modularity
+
+### In Section 2 : modularity
+
+<img src="./design/section2_modulepath.png" alt="section 2 view">
+
+For this section, the original code from Section 1 was slightly modified.
+
+used commands for this project :
+
+1. javac --module-source-path src -d out $(find sr
+c -name "*.java")
+
+2. jar --create --file mods/com.mygroup.hmi.jar -C out/com.mygroup.hmi . 
+3. jar --create --file mods/com.mygroup.ioutil.jar -C out/com.mygroup.ioutil . 
+4. jar --create --file mods/com.mygroup.language.jar -C out/com.mygroup.language . -C src/com.mygroup.language/Resource-Bundle . 
+5. jar --create --file mods/com.mygroup.main.jar --main-class=com.mygroup.main.Main -C out/com.mygroup.main . 
+6. jar --create --file mods/com.mygroup.report.jar -C out/com.mygroup.report . 
+
+
+7. java --module-path mods -m com.mygroup.main/com.mygroup.main.Main
